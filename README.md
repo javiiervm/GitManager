@@ -1,4 +1,4 @@
-# python-gitmanager
+# Git Manager
 
 ### Descripción
 Este programa ha sido desarrollado para realizar de forma más cómoda los git pull y git push en tus proyectos, sobre todo si empleas varios repositorios.
