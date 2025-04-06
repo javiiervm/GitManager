@@ -1,19 +1,25 @@
 # Git Manager
 
-### Descripción
-Este programa ha sido desarrollado para realizar de forma más cómoda los git pull y git push en tus proyectos, sobre todo si empleas varios repositorios.
-De momento este programa solo cuenta con soporte para Linux, aunque igual lo amplío a otros sistemas operativos en el futuro.
+### Description
+This program has been developed to make git pull and git push operations more convenient for your projects, especially if you work with multiple repositories. Currently, this program only supports Linux, but I may extend it to other operating systems in the future.
 
-### Modo de uso
-#### Archivo de Python
-1. Descarga el archivo .py
-2. Si no tienes Python instalado en tu PC, descárgalo desde [su web oficial](https://www.python.org/)).
-3. Guarda el archivo .py en un directorio en el que tengas un entorno virtual de Python (si no lo tienes créalo ejecutando 'python3 -m venv venv' en el directorio donde guardes el .py, y a continuación ejecuta 'source venv/bin/activate' para ponerlo en marcha.
-4. Añade el archivo .py los repositorios que quieras usar. Recuerda que el token, el nombre de usuario y el nombre del repositorio tienen que estar en la misma posición en las listas.
-5. El modo de uso de este script es 'python3 gitmanager.py push/pull', pero es más cómodo si le asignas un alias en la terminal, para así poder llamarlo desde cualquier parte de tu PC.
-6. Para añadir un alias, ve al archivo fuente de tu shell (bashrc, zshrc...) y añade 'alias push/pull=python3 camino/hasta/tu/gitmanager.py push/pull' (recuerda que los alias para push y para pull se definen por separado).
-7. A partir de ahora ya puedes llamar a este script desde cualquier directorio de tu PC.
+### Available commands
+| Header 1   | Header 2   | Header 3   |
+|------------|------------|------------|
+| Row 1, Col 1 | Row 1, Col 2 | Row 1, Col 3 |
+| Row 2, Col 1 | Row 2, Col 2 | Row 2, Col 3 |
+| Row 3, Col 1 | Row 3, Col 2 | Row 3, Col 3 |
 
-### Consideraciones
-* Este es un programa para manejar desde la terminal
-* Para salir del programa interrumpiendo la ejecución tienes que emplear el comando CTRL + C
+### Usage
+#### Python File
+1. Download the .py file.
+2. If you don't have Python installed on your PC, download it from [its official website](https://www.python.org/)).
+3. Save the .py file in a directory where you have a Python virtual environment (if you don't have one, create it by running 'python3 -m venv venv' in the directory where you saved the .py, and then execute 'source venv/bin/activate' to activate it). This may not be necessary if you have allowed Python to run in your system without requiring a virtual environment.
+4. Add the repositories you want to use to the .py file. Remember that the token, username, and repository name must be in the same positions in the lists.
+5. The usage for this script is 'python3 gitmanager.py push/pull', but it's more convenient if you assign an alias to it in the terminal, so you can call it from anywhere on your PC.
+6. To add an alias, go to the source file of your shell (bashrc, zshrc...) and add 'alias push/pull=python3 path/to/your/gitmanager.py push/pull' (remember that aliases for push and pull are defined separately).
+7. From now on, you can call this script from any directory on your PC.
+
+### Considerations
+* This is a program to be used from the terminal.
+* To exit the program and interrupt execution, use the command CTRL + C.
