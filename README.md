@@ -4,6 +4,7 @@
 This program has been developed to make git pull and git push operations more convenient for your projects, especially if you work with multiple repositories. Currently, this program only supports Linux, but I may extend it to other operating systems in the future.
 
 ### Available commands
+This table shows the aliases I recommend to define for using the program, along with the parameter they will send to the program and the action this parameter performs (check the usage guide to know more about aliases and commands).
 | Alias   | Command  | Action   |
 |------------|------------|------------|
 | pull | pull | git pull |
