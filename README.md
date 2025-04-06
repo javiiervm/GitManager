@@ -4,11 +4,14 @@
 This program has been developed to make git pull and git push operations more convenient for your projects, especially if you work with multiple repositories. Currently, this program only supports Linux, but I may extend it to other operating systems in the future.
 
 ### Available commands
-| Header 1   | Header 2   | Header 3   |
+| Alias   | Command  | Action   |
 |------------|------------|------------|
-| Row 1, Col 1 | Row 1, Col 2 | Row 1, Col 3 |
-| Row 2, Col 1 | Row 2, Col 2 | Row 2, Col 3 |
-| Row 3, Col 1 | Row 3, Col 2 | Row 3, Col 3 |
+| pull | pull | git pull |
+| push | push | git add . && git push |
+| psh | pushnoadd | git push |
+| copytoken | token | Copies the token of the selected repo to the clipboard |
+| copyuser | user | Copies the user of the selected repo to the clipboard |
+| copyusertoken | usertoken | Copies both token and user of the selected repo to the clipboard |
 
 ### Usage
 #### Python File
