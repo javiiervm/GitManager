@@ -1,37 +1,117 @@
-# Git Manager
+<div align="center">
+  <img width="80" height="80" alt="Git-Icon-1788C" src="https://github.com/user-attachments/assets/a0385a6f-6304-40c2-af95-3c76da4b5cee" />
+  <h1 align="center">Git Manager</h1>
+</div>
+<br /><br />
 
-### Description
-This program has been developed to make git pull and git push operations more convenient for your projects, especially if you work with multiple repositories. 
-> [!NOTE]
-> This program was originally developed for Linux (Ubuntu), but it has also been tested succesfully on Windows.
-
-### Available commands
-This table shows the aliases I recommend to define for using the program, along with the parameter they will send to the program and the action this parameter performs (check the usage guide to know more about aliases and commands).
-| Alias   | Command  | Action   |
-|------------|------------|------------|
-| pull | pull | git pull |
-| push | push | git add . && git push |
-| psh | pushnoadd | git push |
-| copytoken | token | Copies the token of the selected repo to the clipboard |
-| copyuser | user | Copies the user of the selected repo to the clipboard |
-| copyusertoken | usertoken | Copies both token and user of the selected repo to the clipboard |
-
-### Usage
-#### Python File
-1. Download the .py file.
-2. If you don't have Python installed on your PC, download it from [its official website](https://www.python.org/)).
-3. Save the .py file in a directory where you have a Python virtual environment (if you don't have one, create it by running `'python3 -m venv venv'` in the directory where you saved the .py, and then execute `'source venv/bin/activate'` to activate it).
-> [!NOTE]
-> This may not be necessary if you have allowed Python to run in your system without requiring a virtual environment, or if you are using Windows instead of Linux.
-4. Add the repositories you want to use to the .py file. Remember that the token, username, and repository name must be in the same positions in the lists.
-5. The usage for this script is `'python3 gitmanager.py command'`, but it's more convenient if you assign an alias to it in the terminal, so you can call it from anywhere on your PC.
-6. To add an alias, go to the source file of your shell (bashrc, zshrc...) and add `'alias your_alias=python3 path/to/your/gitmanager.py command'`, for example `'alias push=python3 path/to/your/gitmanager.py push'`, 'push' being the parameter passed to the program when calling it.
+**Git Manager** is a Python command-line tool for easily managing GitHub repositories and personal access tokens. It provides a user-friendly interactive menu to perform common git operations, manage authentication tokens, and handle branches, commits, and clipboard operations across Linux, Windows, and macOS.
 > [!WARNING]
-> Don't use as aliases existing commands, such as 'git push'.
-7. From now on, you can call this script from any directory on your PC.
+> This program has originally been developed for Linux (successfully tested in Ubuntu), but it has also been tested successfully on Windows. It should also be compatible with macOS, but it **hasn't been tested in this environment**.
 
-### Considerations
-* This is a program to be used from the terminal.
-* To exit the program and interrupt execution, use the command CTRL + C.
+> [!WARNING]
+> All routes specified in this code must follow **UNIX format** for the script to work properly.
+
+(MENCIONAR LO DE GIT BASH CONSOLE EN WINDOWS)
+
+## Features
+* **Token Management**: Securely store, retrieve, copy, and delete GitHub personal access tokens per repository using a json file (doesn't change any GitHub data!).
+* **Git Operations**: Pull, push (with or without commit), commit, and add files interactively.
+* **Branch Management**: List, create, delete, switch, and merge branches.
+* **Revert Actions**: Revert last commit, push, add, or merge.
+* **Clipboard Support**: Copy tokens to the clipboard with cross-platform support.
+* **Interactive Menus**: Easy-to-use text-based interface for all operations.
+* **Token Management Mode**: Manage tokens even when not inside a git repository.
+
+## Security
+Tokens are stored in a JSON file in your home directory under `.scripts/.safe/` (you can change this route to what you want), and they are only used for authenticated git operations and are not shared elsewhere.
+
+## Requirements
+* Python 3.10 or newer (for match statement support)
+* pyperclip Python package
+* Git installed and available in your system PATH
+
+## Installation
+
+## Usage
+Navigate to your git repository directory and run:
+```bash
+gitmanager    # (or the alias you have defined).
+```
+If not inside a git repository, GitManager will start in **token management mode**.
+
+## Example
+```bash
+$ python gitmanager.py
+Repository URL detected: https://github.com/youruser/yourrepo
+=============== GIT MANAGER ===============
+1. pull
+2. push (add all + commit)
+...
+Select an option:
+>> 2
+Enter the commit message (optional):
+>> Update README
+```
+
+### Main menu
+When inside a git repository, you will see a screen like this:
+```bash
+=============== GIT MANAGER ===============
+1. pull
+2. push (add all + commit)
+3. push (existing commit only)
+4. commit only
+5. interactive add
+6. git status
+7. show current branch
+8. manage branches
+9. copy token
+10. revert last commit
+11. revert last push
+12. revert last add
+13. revert last merge
+14. remove this repo from git manager
+0. exit
+```
+Menu options:
+1. **pull**: Pull from remote using your stored token.
+2. **push (add all + commit)**: Add all changes, commit, and push.
+3. **push (existing commit only)**: Push existing commits without adding/committing.
+4. **commit only**: Commit changes without adding or pushing.
+5. **interactive add**: Selectively add files to staging.
+6. **git status**: Show current git status.
+7. **show current branch**: Display the current branch name.
+8. **manage branches**: List, create, delete, switch, or merge branches.
+9. **copy token**: Copy the stored token for this repo to clipboard.
+10. **revert last commit**: Revert the most recent commit.
+11. **revert last push**: Undo the last push (force push).
+12. **revert last add**: Unstage all staged files.
+13. **revert last merge**: Abort the last merge operation.
+14. **remove this repo from git manager**: Delete the stored token for this repo.
+0. **exit**: Exit the program.
+
+### Token management mode
+If not in a git repository, you can:
+* List tokens
+* Copy token
+* Add token
+* Delete token
+* Delete all tokens
+* Exit
+
 > [!IMPORTANT]
-> **Always** check that the output in the terminal confirms that the operation has been performed successfully. This version of the gitmanager has a little issue, if for example you use an empty commit when using push, the operation is aborted but the final line of the output still says "Push performed successfully", this will be fixed in the next version of the program but from now make sure to check that the output doesn't say the operation was aborted.
+> Tokens are stored by default in the route:
+> ```bash
+> ~/.scripts/.safe/.gitmanager_tokens.json
+> ```
+> Make sure to create all this folders or change the route to an existing one!
+
+## Troubleshooting
+* **Clipboard not working?**
+  * On Linux, install `xclip` or `xsel`.
+  * On Windows/macOS, ensure `pyperclip` is installed.
+* **Token not accepted?**
+  * Ensure your GitHub token has the correct scopes (typically repo).
+
+<br /><br />
+For any issues or suggestions, please open an issue or contact the author.
