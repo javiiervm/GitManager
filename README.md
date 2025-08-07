@@ -26,7 +26,7 @@
 Tokens are stored in a JSON file in your home directory under `.scripts/.safe/` (you can change this route to what you want), and they are only used for authenticated git operations and are not shared elsewhere.
 
 ## Requirements
-* Python 3.10 or newer (for match statement support)
+* Python 3.10 or newer *(Program has been tested with Python 3.13)*
 * pyperclip Python package
 * Git installed and available in your system PATH
 
@@ -38,20 +38,6 @@ Navigate to your git repository directory and run:
 gitmanager    # (or the alias you have defined).
 ```
 If not inside a git repository, GitManager will start in **token management mode**.
-
-## Example
-```bash
-$ python gitmanager.py
-Repository URL detected: https://github.com/youruser/yourrepo
-=============== GIT MANAGER ===============
-1. pull
-2. push (add all + commit)
-...
-Select an option:
->> 2
-Enter the commit message (optional):
->> Update README
-```
 
 ### Main menu
 When inside a git repository, you will see a screen like this:
@@ -105,6 +91,20 @@ If not in a git repository, you can:
 > ~/.scripts/.safe/.gitmanager_tokens.json
 > ```
 > Make sure to create all this folders or change the route to an existing one!
+
+## Example
+```bash
+$ python gitmanager.py
+Repository URL detected: https://github.com/youruser/yourrepo
+=============== GIT MANAGER ===============
+1. pull
+2. push (add all + commit)
+...
+Select an option:
+>> 2
+Enter the commit message (optional):
+>> Update README
+```
 
 ## Troubleshooting
 * **Clipboard not working?**
