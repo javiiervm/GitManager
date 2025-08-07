@@ -5,7 +5,7 @@ import json
 import platform
 import pyperclip
 
-TOKEN_FILE = os.path.expanduser("~/.gitmanager_tokens.json")
+TOKEN_FILE = os.path.expanduser("~/.scripts/.safe/.gitmanager_tokens.json")
 
 RESET = "\033[0m"
 BOLD = "\033[1m"
