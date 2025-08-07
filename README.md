@@ -5,13 +5,16 @@
 <br /><br />
 
 **Git Manager** is a Python command-line tool for easily managing GitHub repositories and personal access tokens. It provides a user-friendly interactive menu to perform common git operations, manage authentication tokens, and handle branches, commits, and clipboard operations across Linux, Windows, and macOS.
-> [!WARNING]
-> This program has originally been developed for Linux (successfully tested in Ubuntu), but it has also been tested successfully on Windows. It should also be compatible with macOS, but it **hasn't been tested in this environment**.
+> [!NOTE]
+> This program has originally been developed for **Linux** and successfully tested in *Ubuntu*.
 
 > [!WARNING]
+> This program has also been tested successfully on **Windows**, using the **Git Bash terminal**, (NOT WORKING WITH POWERSHELL).
+>
+> It should also be compatible with macOS, but it **hasn't been tested in this environment**.
+
+> [!CAUTION]
 > All routes specified in this code must follow **UNIX format** for the script to work properly.
-
-(MENCIONAR LO DE GIT BASH CONSOLE EN WINDOWS)
 
 ## Features
 * **Token Management**: Securely store, retrieve, copy, and delete GitHub personal access tokens per repository using a json file (doesn't change any GitHub data!).
@@ -23,7 +26,14 @@
 * **Token Management Mode**: Manage tokens even when not inside a git repository.
 
 ## Security
-Tokens are stored in a JSON file in your home directory under `.scripts/.safe/` (you can change this route to what you want), and they are only used for authenticated git operations and are not shared elsewhere.
+Tokens are stored in a JSON file for authenticated git operations and are not shared elsewhere.
+
+> [!IMPORTANT]
+> Tokens are stored by default in the route:
+> ```bash
+> ~/.scripts/.safe/.gitmanager_tokens.json
+> ```
+> Make sure to create all this folders or change the route to an existing one!
 
 ## Requirements
 * Python 3.10 or newer *(Program has been tested with Python 3.13)*
@@ -39,72 +49,34 @@ gitmanager    # (or the alias you have defined).
 ```
 If not inside a git repository, GitManager will start in **token management mode**.
 
-### Main menu
-When inside a git repository, you will see a screen like this:
-```bash
-=============== GIT MANAGER ===============
-1. pull
-2. push (add all + commit)
-3. push (existing commit only)
-4. commit only
-5. interactive add
-6. git status
-7. show current branch
-8. manage branches
-9. copy token
-10. revert last commit
-11. revert last push
-12. revert last add
-13. revert last merge
-14. remove this repo from git manager
-0. exit
-```
-Menu options:
-1. **pull**: Pull from remote using your stored token.
-2. **push (add all + commit)**: Add all changes, commit, and push.
-3. **push (existing commit only)**: Push existing commits without adding/committing.
-4. **commit only**: Commit changes without adding or pushing.
-5. **interactive add**: Selectively add files to staging.
-6. **git status**: Show current git status.
-7. **show current branch**: Display the current branch name.
-8. **manage branches**: List, create, delete, switch, or merge branches.
-9. **copy token**: Copy the stored token for this repo to clipboard.
-10. **revert last commit**: Revert the most recent commit.
-11. **revert last push**: Undo the last push (force push).
-12. **revert last add**: Unstage all staged files.
-13. **revert last merge**: Abort the last merge operation.
-14. **remove this repo from git manager**: Delete the stored token for this repo.
-0. **exit**: Exit the program.
+### Main menu (inside a repository)
+|  | Action                            | Description                                                        |
+|-----|-----------------------------------|--------------------------------------------------------------------|
+| 1   | **pull**                          | Pull from remote using your stored token.                          |
+| 2   | **push (add all + commit)**       | Add all changes, commit, and push.                                 |
+| 3   | **push (existing commit only)**   | Push existing commits without adding/committing.                   |
+| 4   | **commit only**                   | Commit changes without adding or pushing.                          |
+| 5   | **interactive add**               | Selectively add files to staging.                                  |
+| 6   | **git status**                    | Show current git status.                                           |
+| 7   | **show current branch**           | Display the current branch name.                                   |
+| 8   | **manage branches**               | List, create, delete, switch, or merge branches.                   |
+| 9   | **copy token**                    | Copy the stored token for this repo to clipboard.                  |
+| 10  | **revert last commit**            | Revert the most recent commit.                                     |
+| 11  | **revert last push**              | Undo the last push (force push).                                   |
+| 12  | **revert last add**               | Unstage all staged files.                                          |
+| 13  | **revert last merge**             | Abort the last merge operation.                                    |
+| 14  | **remove this repo from git manager** | Delete the stored token for this repo.                        |
+| 0   | **exit**                          | Exit the program.                                                  |
 
-### Token management mode
-If not in a git repository, you can:
-* List tokens
-* Copy token
-* Add token
-* Delete token
-* Delete all tokens
-* Exit
-
-> [!IMPORTANT]
-> Tokens are stored by default in the route:
-> ```bash
-> ~/.scripts/.safe/.gitmanager_tokens.json
-> ```
-> Make sure to create all this folders or change the route to an existing one!
-
-## Example
-```bash
-$ python gitmanager.py
-Repository URL detected: https://github.com/youruser/yourrepo
-=============== GIT MANAGER ===============
-1. pull
-2. push (add all + commit)
-...
-Select an option:
->> 2
-Enter the commit message (optional):
->> Update README
-```
+### Token management mode (outside a repository)
+|  | Action                            | Description                                                        |
+|-----|-----------------------------------|--------------------------------------------------------------------|
+| 1   | **List tokens**                          |                          |
+| 2   | **Copy token**       |                                |
+| 3   | **Add token**   |                  |
+| 4   | **Delete token**                   |                         |
+| 5   | **Delete all tokens**               |                                
+| 0   | **Exit**                          | Exit the program.                                                  |
 
 ## Troubleshooting
 * **Clipboard not working?**
