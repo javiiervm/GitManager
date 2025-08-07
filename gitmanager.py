@@ -212,7 +212,7 @@ def remove_token_for_repo(repo_url, tokens):
 
 def reduced_menu(tokens):
     while True:
-        print("======= GIT MANAGER (No repo detected) =======")
+        print("\n======= GIT MANAGER (No repo detected) =======")
         print("1. List tokens")
         print("2. Copy token")
         print("3. Add token")
@@ -272,12 +272,12 @@ def reduced_menu(tokens):
                         print(f"{RED}Invalid selection.{RESET}")
                 case "5":
                     confirm = input(f"{RED}Are you sure you want to delete ALL tokens? (Y/N):{RESET}\n>> ").strip().lower()
-                    if confirm.tolower() == "y":
+                    if confirm == "y":
                         tokens.clear()
                         save_tokens(tokens)
                         print(f"{GREEN}All tokens deleted.{RESET}")
                 case "0":
-                    break
+                    return
                 case _:
                     print(f"{RED}Unrecognized option.{RESET}")
 
