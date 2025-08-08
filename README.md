@@ -41,6 +41,44 @@ Tokens are stored in a JSON file for authenticated git operations and are not sh
 * Git installed and available in your system PATH
 
 ## Installation
+> [!TIP]
+> The idea is that you have the script somewhere you can access to from anywhere in the computer, and assign an alias to execute the script automatically. This example is made with the route `~/.scripts/` but you can choose what you want as soon as it is a valid path.
+
+The installation is done inside the selected path, `~/.scripts/` in our case. Please move to your desired installation folder before beginning the process.
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/javiiervm/python-gitmanager.git
+   cd python-gitmanager
+   ```
+
+2. **Install the dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+ > [!CAUTION]
+ > I recommend not creating a virtual environment for this project, or the script may not work properly from any directory. However, if you want to create a virtual environment to install the dependencies there, you can do so with the command:
+ >
+ > ```bash
+ > python3 -m venv venv
+ > source venv/bin/activate  # On Windows use: venv\Scripts\activate
+ > ```
+
+3. **Define an alias for the script:**
+   Open your shell script in your favourite editor, for example in a bash terminal with nano editor:
+   ```bash
+   nano ~/.bashrc
+   ```
+   > For zsh you should execute `nano ~/.zshrc` or maybe you prefer to use `vim` instead of `nano`, make sure to match your system configuration in this step.
+   
+   Once you have opened the shell script in your text editor, add the following line at the bottom:
+   ```bash
+   alias gitmanager="python3 ~/.scripts/gitmanager.py"
+   # You may have defined another route or may need to execute 'python' instead of 'python3', depending on your installation and OS
+   ```
+
+You are all set!
 
 ## Usage
 Navigate to your git repository directory and run:
@@ -71,11 +109,11 @@ If not inside a git repository, GitManager will start in **token management mode
 ### Token management mode (outside a repository)
 |  | Action                            | Description                                                        |
 |-----|-----------------------------------|--------------------------------------------------------------------|
-| 1   | **List tokens**                          |                          |
-| 2   | **Copy token**       |                                |
-| 3   | **Add token**   |                  |
-| 4   | **Delete token**                   |                         |
-| 5   | **Delete all tokens**               |                                
+| 1   | **List tokens**                          | Shows a list with the name of the repositories that have a stored token in the JSON file.                        |
+| 2   | **Copy token**       | Copies to the clipboard the token assigned to the repository the user selects.                               |
+| 3   | **Add token**   | Asks for a GitHub repository link and its token, and adds it to the JSON file.                 |
+| 4   | **Delete token**                   | Deletes from the JSON file the information about the selected repository.                        |
+| 5   | **Delete all tokens**               | Clears all the content in the JSON file.                               
 | 0   | **Exit**                          | Exit the program.                                                  |
 
 ## Troubleshooting
