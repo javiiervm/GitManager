@@ -48,7 +48,7 @@ The installation is done inside the selected path, `~/.scripts/` in our case. Pl
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/javiiervm/python-gitmanager.git
-   cd python-gitmanager
+   cd GitManager
    ```
 
 2. **Install the dependencies:**
