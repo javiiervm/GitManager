@@ -5,6 +5,7 @@ import json
 import platform
 import pyperclip
 
+# Modify this route to match where you want to store the JSON that contains the tokens' information
 TOKEN_FILE = os.path.expanduser("~/.scripts/.safe/.gitmanager_tokens.json")
 
 RESET = "\033[0m"
@@ -352,4 +353,5 @@ if __name__ == "__main__":
             case "0" | "exit":
                 break
             case _:
+
                 print(f"{RED}Unrecognized option.{RESET}")
