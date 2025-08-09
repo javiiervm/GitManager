@@ -3,26 +3,28 @@ import sys
 import subprocess
 import json
 import platform
-import pyperclip
 
-# Modify this route to match where you want to store the JSON that contains the tokens' information
+try:
+    import pyperclip
+except Exception:
+    pyperclip = None
+
 TOKEN_FILE = os.path.expanduser("~/.scripts/.safe/.gitmanager_tokens.json")
-
 RESET = "\033[0m"
 BOLD = "\033[1m"
 GREEN = "\033[92m"
 RED = "\033[91m"
 
+
 def get_repo_url():
     try:
-        remote_url = subprocess.check_output(
-            ["git", "remote", "get-url", "origin"], encoding="utf-8"
-        ).strip()
+        remote_url = subprocess.check_output(["git", "remote", "get-url", "origin"], encoding="utf-8").strip()
         if remote_url.endswith(".git"):
             remote_url = remote_url[:-4]
         return remote_url
     except Exception:
         return None
+
 
 def load_tokens():
     if os.path.exists(TOKEN_FILE):
@@ -30,9 +32,11 @@ def load_tokens():
             return json.load(f)
     return {}
 
+
 def save_tokens(tokens):
     with open(TOKEN_FILE, "w") as f:
         json.dump(tokens, f)
+
 
 def get_token_for_repo(repo_url, tokens):
     if repo_url in tokens:
@@ -47,15 +51,15 @@ def get_token_for_repo(repo_url, tokens):
     print(f"{BOLD}You can now use this token for operations on {repo_url}.{RESET}\n")
     return token
 
+
 def get_user_and_repo(repo_url):
-    # repo_url format: https://github.com/user/repo
     path = repo_url.split("github.com/", 1)[1]
     user, repo = path.split("/", 1)
     return user, repo
 
+
 def copy_to_clipboard_windows(text):
     try:
-        import ctypes
         if not isinstance(text, str):
             text = str(text)
         cmd = f'echo {text.strip()}| clip'
@@ -63,10 +67,14 @@ def copy_to_clipboard_windows(text):
         print(f"{GREEN}Copied to clipboard!{RESET}")
     except Exception:
         try:
-            pyperclip.copy(text)
-            print(f"{GREEN}Copied to clipboard using pyperclip!{RESET}")
+            if pyperclip:
+                pyperclip.copy(text)
+                print(f"{GREEN}Copied to clipboard using pyperclip!{RESET}")
+            else:
+                print(f"{RED}Clipboard copy failed on Windows. Install pyperclip or use a compatible terminal.{RESET}")
         except Exception:
-            print(f"{RED}Clipboard copy failed on Windows. Please install pyperclip or use a compatible terminal.{RESET}")
+            print(f"{RED}Clipboard copy failed on Windows.{RESET}")
+
 
 def copy_to_clipboard_linux(text):
     try:
@@ -77,13 +85,14 @@ def copy_to_clipboard_linux(text):
             os.system(f"echo '{text}' | xsel --clipboard --input")
             print(f"{GREEN}Copied to clipboard!{RESET}")
         else:
-            try:
+            if pyperclip:
                 pyperclip.copy(text)
                 print(f"{GREEN}Copied to clipboard using pyperclip!{RESET}")
-            except Exception:
+            else:
                 print(f"{RED}No clipboard utility found (install xclip, xsel, or pyperclip).{RESET}")
     except Exception:
         print(f"{RED}Clipboard copy failed on Linux.{RESET}")
+
 
 def copy_to_clipboard_macos(text):
     try:
@@ -91,10 +100,14 @@ def copy_to_clipboard_macos(text):
         print(f"{GREEN}Copied to clipboard!{RESET}")
     except Exception:
         try:
-            pyperclip.copy(text)
-            print(f"{GREEN}Copied to clipboard using pyperclip!{RESET}")
+            if pyperclip:
+                pyperclip.copy(text)
+                print(f"{GREEN}Copied to clipboard using pyperclip!{RESET}")
+            else:
+                print(f"{RED}Clipboard copy failed on macOS. Install pyperclip or use a compatible terminal.{RESET}")
         except Exception:
-            print(f"{RED}Clipboard copy failed on macOS. Please install pyperclip or use a compatible terminal.{RESET}")
+            print(f"{RED}Clipboard copy failed on macOS.{RESET}")
+
 
 def copy_to_clipboard(text):
     system = platform.system()
@@ -106,14 +119,19 @@ def copy_to_clipboard(text):
         copy_to_clipboard_macos(text)
     else:
         try:
-            pyperclip.copy(text)
-            print(f"{GREEN}Copied to clipboard using pyperclip!{RESET}")
+            if pyperclip:
+                pyperclip.copy(text)
+                print(f"{GREEN}Copied to clipboard using pyperclip!{RESET}")
+            else:
+                print(f"{RED}Clipboard copy not supported on this OS.{RESET}")
         except Exception:
             print(f"{RED}Clipboard copy not supported on this OS.{RESET}")
+
 
 def make_pull(token, user, repo):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
     os.system(f"git pull {remote_url}")
+
 
 def make_push(token, user, repo, commit_msg):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
@@ -121,12 +139,15 @@ def make_push(token, user, repo, commit_msg):
     os.system(f'git commit -m "{commit_msg}"')
     os.system(f"git push {remote_url}")
 
+
 def make_push_no_add(token, user, repo):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
     os.system(f"git push {remote_url}")
 
+
 def make_commit_only(commit_msg):
     os.system(f'git commit -m "{commit_msg}"')
+
 
 def interactive_git_add():
     status = subprocess.check_output(["git", "status", "--short"], encoding="utf-8")
@@ -149,13 +170,16 @@ def interactive_git_add():
     except Exception as e:
         print(f"{RED}Error: {e}{RESET}")
 
+
 def show_git_status():
     status = subprocess.check_output(["git", "status"], encoding="utf-8")
     print(f"{BOLD}{status}{RESET}")
 
+
 def show_current_branch():
     branch = subprocess.check_output(["git", "branch", "--show-current"], encoding="utf-8").strip()
     print(f"{GREEN}Current branch: {BOLD}{branch}{RESET}")
+
 
 def manage_branches():
     while True:
@@ -189,19 +213,24 @@ def manage_branches():
                 case _:
                     print(f"{RED}Unrecognized option.{RESET}")
 
+
 def revert_last_commit():
     os.system("git revert HEAD")
+
 
 def revert_last_push(token, user, repo):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
     os.system("git reset --hard HEAD~1")
     os.system(f"git push {remote_url} --force")
 
+
 def revert_last_add():
     os.system("git reset")
 
+
 def revert_last_merge():
     os.system("git merge --abort")
+
 
 def remove_token_for_repo(repo_url, tokens):
     if repo_url in tokens:
@@ -211,64 +240,105 @@ def remove_token_for_repo(repo_url, tokens):
     else:
         print(f"{RED}No token found for {repo_url}.{RESET}")
 
-def sparse_checkout_untrack():
-    tracked = subprocess.check_output(["git", "ls-files"], encoding="utf-8").splitlines()
-    if not tracked:
-        print(f"{RED}No files tracked by git.{RESET}")
+
+def list_all_files():
+    try:
+        output = subprocess.check_output(["git", "ls-files"], encoding="utf-8")
+        files = output.strip().split("\n")
+        return [f for f in files if f]
+    except subprocess.CalledProcessError:
+        print(f"{RED}Error listing files.{RESET}")
+        return []
+
+
+def list_sparse_files():
+    try:
+        output = subprocess.check_output(["git", "sparse-checkout", "list"], encoding="utf-8")
+        files = output.strip().split("\n")
+        return [f for f in files if f]
+    except Exception:
+        return []
+
+
+def untrack_files():
+    all_files = list_all_files()
+    if not all_files:
+        print(f"{RED}No tracked files found.{RESET}")
         return
-    print("Select files/folders to UNTRACK (sparse-checkout set):")
-    for idx, fname in enumerate(tracked, 1):
+    current_included = list_sparse_files()
+    if not current_included:
+        current_included = all_files
+    # exclude files already untracked (not in current_included)
+    candidates = [f for f in all_files if f in current_included]
+    if not candidates:
+        print(f"{GREEN}No files to untrack.{RESET}")
+        return
+    print("Select files to untrack (comma separated numbers):")
+    for idx, fname in enumerate(candidates, 1):
         print(f"{idx}. {fname}")
-    choices = input("Comma-separated numbers (e.g. 1,3,5):\n>> ").strip()
+    choices = input(">> ").strip()
     if not choices:
         print(f"{RED}No files selected.{RESET}")
         return
     try:
-        selected = [tracked[int(i)-1] for i in choices.split(",") if i.strip().isdigit() and 0 < int(i) <= len(tracked)]
+        selected = [candidates[int(i) - 1] for i in choices.split(",") if i.strip().isdigit() and 0 < int(i) <= len(candidates)]
         if not selected:
             print(f"{RED}Invalid selection.{RESET}")
             return
-        subprocess.run(["git", "sparse-checkout", "init"], check=False)
-        subprocess.run(["git", "sparse-checkout", "set"] + selected, check=True)
+        new_included = [f for f in current_included if f not in selected]
+        subprocess.run(["git", "sparse-checkout", "init", "--no-cone"], check=False)
+        if new_included:
+            subprocess.run(["git", "sparse-checkout", "set"] + new_included, check=True)
+        else:
+            subprocess.run(["git", "sparse-checkout", "set"], check=True)
         subprocess.run(["git", "checkout"], check=True)
-        print(f"{GREEN}Sparse-checkout applied. Only the selected files will remain in the working tree.{RESET}")
+        print(f"{GREEN}Files untracked: {', '.join(selected)}{RESET}")
     except Exception as e:
         print(f"{RED}Error: {e}{RESET}")
 
-def sparse_checkout_restore():
-    try:
-        current = subprocess.check_output(["git", "sparse-checkout", "list"], encoding="utf-8").splitlines()
-    except Exception:
-        print(f"{RED}Sparse-checkout is not active or could not be read.{RESET}")
+
+def restore_untracked_files():
+    all_files = list_all_files()
+    if not all_files:
+        print(f"{RED}No tracked files found.{RESET}")
         return
-    if not current:
-        print(f"{GREEN}No active sparse-checkout.{RESET}")
+    current_included = list_sparse_files()
+    if not current_included:
+        print(f"{GREEN}No files currently untracked.{RESET}")
         return
-    print("Active sparse-checkout on:")
-    for idx, fname in enumerate(current, 1):
+    excluded = [f for f in all_files if f not in current_included]
+    if not excluded:
+        print(f"{GREEN}No files currently untracked.{RESET}")
+        return
+    print("Select files to restore:")
+    print("0. Back")
+    for idx, fname in enumerate(excluded, 1):
         print(f"{idx}. {fname}")
-    print("What do you want to restore?")
-    print("1. Restore ALL files (disable sparse-checkout)")
-    print("2. Restore specific files/folders")
-    op = input("Select option:\n>> ").strip()
-    if op == "1":
-        subprocess.run(["git", "sparse-checkout", "disable"], check=True)
-        subprocess.run(["git", "checkout"], check=True)
-        print(f"{GREEN}Sparse-checkout disabled. All files restored.{RESET}")
-    elif op == "2":
-        sel = input("Comma-separated numbers of the files to restore:\n>> ").strip()
-        if not sel:
-            print(f"{RED}No files selected.{RESET}")
-            return
-        try:
-            selected = [current[int(i)-1] for i in sel.split(",") if i.strip().isdigit() and 0 < int(i) <= len(current)]
-            subprocess.run(["git", "sparse-checkout", "add"] + selected, check=True)
+    print(f"{len(excluded) + 1}. Restore all")
+    choice = input(">> ").strip()
+    if choice == "0" or choice.lower() == "back":
+        print(f"{GREEN}Returning to main menu.{RESET}")
+        return
+    try:
+        if choice == str(len(excluded) + 1):
+            new_included = current_included + [f for f in excluded if f not in current_included]
+            subprocess.run(["git", "sparse-checkout", "init", "--no-cone"], check=False)
+            subprocess.run(["git", "sparse-checkout", "set"] + new_included, check=True)
             subprocess.run(["git", "checkout"], check=True)
-            print(f"{GREEN}Selected files restored to the working tree.{RESET}")
-        except Exception as e:
-            print(f"{RED}Error: {e}{RESET}")
-    else:
-        print(f"{RED}Unrecognized option.{RESET}")
+            print(f"{GREEN}All files restored.{RESET}")
+            return
+        selected = [excluded[int(i) - 1] for i in choice.split(",") if i.strip().isdigit() and 0 < int(i) <= len(excluded)]
+        if not selected:
+            print(f"{RED}Invalid selection.{RESET}")
+            return
+        new_included = current_included + [s for s in selected if s not in current_included]
+        subprocess.run(["git", "sparse-checkout", "init", "--no-cone"], check=False)
+        subprocess.run(["git", "sparse-checkout", "set"] + new_included, check=True)
+        subprocess.run(["git", "checkout"], check=True)
+        print(f"{GREEN}Files restored: {', '.join(selected)}{RESET}")
+    except Exception as e:
+        print(f"{RED}Error: {e}{RESET}")
+
 
 def reduced_menu(tokens):
     while True:
@@ -279,7 +349,6 @@ def reduced_menu(tokens):
         print("4. Delete token")
         print("5. Delete all tokens")
         print("0. Exit")
-
         while True:
             op = input("\nSelect an option:\n>> ").strip()
             match op:
@@ -300,7 +369,7 @@ def reduced_menu(tokens):
                         print(f"{idx}. {repo_url}")
                     sel = input(">> ").strip()
                     if sel.isdigit() and 1 <= int(sel) <= len(repo_list):
-                        copy_to_clipboard(tokens[repo_list[int(sel)-1]])
+                        copy_to_clipboard(tokens[repo_list[int(sel) - 1]])
                     else:
                         print(f"{RED}Invalid selection.{RESET}")
                 case "3":
@@ -325,7 +394,7 @@ def reduced_menu(tokens):
                         print(f"{idx}. {repo_url}")
                     sel = input(">> ").strip()
                     if sel.isdigit() and 1 <= int(sel) <= len(repo_list):
-                        del tokens[repo_list[int(sel)-1]]
+                        del tokens[repo_list[int(sel) - 1]]
                         save_tokens(tokens)
                         print(f"{GREEN}Token deleted.{RESET}")
                     else:
@@ -340,6 +409,7 @@ def reduced_menu(tokens):
                     return
                 case _:
                     print(f"{RED}Unrecognized option.{RESET}")
+
 
 def menu():
     print("\n=============== GIT MANAGER ===============")
@@ -357,9 +427,10 @@ def menu():
     print("12. revert last add")
     print("13. revert last merge")
     print("14. remove this repo from git manager")
-    print("15. sparse-checkout untrack files/folders")
-    print("16. undo sparse-checkout (restore all files/folders)")
+    print("15. untrack files (sparse-checkout)")
+    print("16. restore untracked files")
     print("0. exit")
+
 
 if __name__ == "__main__":
     repo_url = get_repo_url()
@@ -370,23 +441,22 @@ if __name__ == "__main__":
     print(f"{GREEN}Repository URL detected: {BOLD}{repo_url}{RESET}")
     token = get_token_for_repo(repo_url, tokens)
     user, repo = get_user_and_repo(repo_url)
-    menu()
-
     while True:
+        menu()
         op = input("\nSelect an option:\n>> ").strip()
         match op.lower():
             case "1":
                 make_pull(token, user, repo)
             case "2":
-                commit_msg = input("Enter the commit message (optional):\n>> ")
-                if not commit_msg.strip():
+                commit_msg = input("Enter the commit message (optional):\n>> ").strip()
+                if not commit_msg:
                     commit_msg = "Updated repository"
                 make_push(token, user, repo, commit_msg)
             case "3":
                 make_push_no_add(token, user, repo)
             case "4":
-                commit_msg = input("Enter the commit message (optional):\n>> ")
-                if not commit_msg.strip():
+                commit_msg = input("Enter the commit message (optional):\n>> ").strip()
+                if not commit_msg:
                     commit_msg = "Updated repository"
                 make_commit_only(commit_msg)
             case "5":
@@ -397,7 +467,6 @@ if __name__ == "__main__":
                 show_current_branch()
             case "8":
                 manage_branches()
-                menu()
             case "9":
                 copy_to_clipboard(token)
             case "10":
@@ -412,9 +481,9 @@ if __name__ == "__main__":
                 remove_token_for_repo(repo_url, tokens)
                 break
             case "15":
-                sparse_checkout_untrack()
+                untrack_files()
             case "16":
-                sparse_checkout_restore()
+                restore_untracked_files()
             case "0" | "exit":
                 break
             case _:
