@@ -1,7 +1,16 @@
 <div align="center">
   <img width="80" height="80" alt="Git-Icon-1788C" src="https://github.com/user-attachments/assets/a0385a6f-6304-40c2-af95-3c76da4b5cee" />
   <h1 align="center">Git Manager</h1>
+
+  <!-- Badges -->
+  <img src="https://img.shields.io/badge/license-MIT-blue" />
+  <img src="https://img.shields.io/github/last-commit/javiiervm/GitManager" />
+  <img src="https://img.shields.io/badge/python-3.10%2B-yellow" />
+  <img src="https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-lightgrey" />
+  <img src="https://img.shields.io/github/languages/count/javiiervm/GitManager" />
+  <img src="https://img.shields.io/github/languages/top/javiiervm/GitManager" />
 </div>
+<br /><br />
 
 **Git Manager** is a Python command-line tool for easily managing GitHub repositories and personal access tokens. It provides a user-friendly interactive menu to perform common git operations, manage authentication tokens, and handle branches, commits, and clipboard operations across Linux, Windows, and macOS.
 > [!NOTE]
