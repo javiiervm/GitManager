@@ -131,7 +131,7 @@ If not inside a git repository, GitManager will start in **token management mode
 | 13  | **revert last merge**             | Abort the last merge operation.                                    |
 | 14  | **remove this repo from git manager** | Delete the stored token for this repo.                        |
 | 15  | **untrack files (sparse-checkout)** | Interactively select files to exclude from the working tree (sparse-checkout untrack).          |
-| 16  | **restore untracked files**         | Interactively select files previously untracked to restore back to the working tree, and disables sparse-checkout when there are no untracked files left           |
+| 16  | **restore untracked files**         | Interactively select files previously untracked to restore back to the working tree, and disables sparse-checkout when there are no untracked files left.           |
 | 0   | **exit**                          | Exit the program.                                                  |
 
 ### Token management mode (outside a repository)
