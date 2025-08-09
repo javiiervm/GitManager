@@ -1,14 +1,19 @@
 <div align="center">
   <img width="80" height="80" alt="Git-Icon-1788C" src="https://github.com/user-attachments/assets/a0385a6f-6304-40c2-af95-3c76da4b5cee" />
   <h1 align="center">Git Manager</h1>
-
-  <!-- Badges -->
   <img src="https://img.shields.io/badge/license-MIT-blue" />
-  <img src="https://img.shields.io/github/last-commit/javiiervm/GitManager" />
+  <img src="https://img.shields.io/github/last-commit/javiiervm/python-gitmanager" />
   <img src="https://img.shields.io/badge/python-3.10%2B-yellow" />
   <img src="https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-lightgrey" />
-  <img src="https://img.shields.io/github/languages/count/javiiervm/GitManager" />
-  <img src="https://img.shields.io/github/languages/top/javiiervm/GitManager" />
+  <img src="https://img.shields.io/github/languages/count/javiiervm/python-gitmanager" />
+  <img src="https://img.shields.io/github/languages/top/javiiervm/python-gitmanager" />
+  <br />
+  <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white" />
+  <img src="https://img.shields.io/badge/Pyperclip-4B8BBE?logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/JSON-000000?logo=json&logoColor=white" />
+  <img src="https://img.shields.io/badge/xclip%20%2F%20xsel-000000?logo=linux&logoColor=white" />
+  <img src="https://img.shields.io/badge/Git%20Bash-4EAA25?logo=gnu-bash&logoColor=white" />
 </div>
 <br /><br />
 
