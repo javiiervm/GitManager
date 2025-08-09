@@ -185,7 +185,7 @@ After this, restart your terminal or run `source ~/.bashrc` (or equivalent) to l
   * On Windows/macOS, ensure `pyperclip` is installed.
 * **Token not accepted?**
   * Ensure your GitHub token has the correct scopes (typically repo).
-* **Key format error?** *
+* **Key format error?**
   * Your `GITMANAGER_KEY` must be a base64-encoded 32-byte key. Use `generate_key.py` to create a valid key.
 
 ## Contact & Contributions
