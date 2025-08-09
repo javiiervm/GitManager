@@ -8,7 +8,6 @@ try:
 except ImportError:
     pyperclip = None
 
-
 def copy_to_clipboard_windows(text):
     try:
         if not isinstance(text, str):
@@ -25,7 +24,6 @@ def copy_to_clipboard_windows(text):
                 print("Clipboard copy failed on Windows. Install pyperclip or use a compatible terminal.")
         except Exception:
             print("Clipboard copy failed on Windows.")
-
 
 def copy_to_clipboard_linux(text):
     try:
@@ -44,7 +42,6 @@ def copy_to_clipboard_linux(text):
     except Exception:
         print("Clipboard copy failed on Linux.")
 
-
 def copy_to_clipboard_macos(text):
     try:
         os.system(f"echo '{text}' | pbcopy")
@@ -58,7 +55,6 @@ def copy_to_clipboard_macos(text):
                 print("Clipboard copy failed on macOS. Install pyperclip or use a compatible terminal.")
         except Exception:
             print("Clipboard copy failed on macOS.")
-
 
 def copy_to_clipboard(text):
     system = platform.system()
@@ -78,7 +74,6 @@ def copy_to_clipboard(text):
         except Exception:
             print("Clipboard copy not supported on this OS.")
 
-
 def generate_key():
     key = Fernet.generate_key()
     key_str = key.decode()
@@ -88,7 +83,6 @@ def generate_key():
     copy_to_clipboard(key_str)
     print("The key has been copied to your clipboard.\n")
 
-    # Show the export command
     export_cmd = f'export GITMANAGER_KEY="{key_str}"'
     print(f"To set this key as an environment variable, you can run:\n\n{export_cmd}\n")
 
