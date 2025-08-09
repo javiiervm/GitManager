@@ -336,7 +336,6 @@ def untrack_files():
     except Exception as e:
         print(f"{RED}Error: {e}{RESET}")
 
-
 def restore_untracked_files():
     all_files = list_all_files()
     if not all_files:
@@ -366,19 +365,27 @@ def restore_untracked_files():
             subprocess.run(["git", "sparse-checkout", "set"] + new_included, check=True)
             subprocess.run(["git", "checkout"], check=True)
             print(f"{GREEN}All files restored.{RESET}")
-            return
-        selected = [excluded[int(i) - 1] for i in choice.split(",") if i.strip().isdigit() and 0 < int(i) <= len(excluded)]
-        if not selected:
-            print(f"{RED}Invalid selection.{RESET}")
-            return
-        new_included = current_included + [s for s in selected if s not in current_included]
-        subprocess.run(["git", "sparse-checkout", "init", "--no-cone"], check=False)
-        subprocess.run(["git", "sparse-checkout", "set"] + new_included, check=True)
-        subprocess.run(["git", "checkout"], check=True)
-        print(f"{GREEN}Files restored: {', '.join(selected)}{RESET}")
+        else:
+            selected = [excluded[int(i) - 1] for i in choice.split(",") if i.strip().isdigit() and 0 < int(i) <= len(excluded)]
+            if not selected:
+                print(f"{RED}Invalid selection.{RESET}")
+                return
+            new_included = current_included + [s for s in selected if s not in current_included]
+            subprocess.run(["git", "sparse-checkout", "init", "--no-cone"], check=False)
+            subprocess.run(["git", "sparse-checkout", "set"] + new_included, check=True)
+            subprocess.run(["git", "checkout"], check=True)
+            print(f"{GREEN}Files restored: {', '.join(selected)}{RESET}")
     except Exception as e:
         print(f"{RED}Error: {e}{RESET}")
-
+        return
+    current_included = list_sparse_files()
+    excluded = [f for f in all_files if f not in current_included]
+    if not excluded:
+        try:
+            subprocess.run(["git", "sparse-checkout", "disable"], check=True)
+            print(f"{GREEN}sparse-checkout disabled (no more untracked files).{RESET}")
+        except Exception as e:
+            print(f"{RED}Failed to disable sparse-checkout: {e}{RESET}")
 
 def reduced_menu(tokens):
     while True:
