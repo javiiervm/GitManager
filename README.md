@@ -11,6 +11,7 @@
   <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" />
   <img src="https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white" />
   <img src="https://img.shields.io/badge/Pyperclip-4B8BBE?logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Cryptography-4E2A8E?logo=python&logoColor=white" />
   <img src="https://img.shields.io/badge/JSON-000000?logo=json&logoColor=white" />
   <img src="https://img.shields.io/badge/xclip%20%2F%20xsel-000000?logo=linux&logoColor=white" />
   <img src="https://img.shields.io/badge/Git%20Bash-4EAA25?logo=gnu-bash&logoColor=white" />
@@ -43,7 +44,7 @@
   This allows fine-grained control of which files are checked out locally, helping with large repos or partial checkouts.
 
 ## Security
-Tokens are stored in a JSON file for authenticated git operations and are not shared elsewhere.
+Tokens are stored **encrypted** in a JSON file for authenticated git operations and are not shared elsewhere.
 
 > [!IMPORTANT]
 > Tokens are stored by default in the route:
@@ -52,10 +53,14 @@ Tokens are stored in a JSON file for authenticated git operations and are not sh
 > ```
 > Make sure to create all this folders or change the route to an existing one!
 
+The encryption key must be provided via the environment variable `GITMANAGER_KEY` in base64 format (32 bytes). This key encrypts/decrypts your tokens securely.
+
 ## Requirements
-* Python 3.10 or newer *(Program has been tested with Python 3.13)*
-* pyperclip Python package
-* Git installed and available in your system PATH
+- Python 3.10 or newer *(Program has been tested with Python 3.13)*
+- `cryptography` Python package
+- `pyperclip` Python package (optional, for clipboard support)
+- Git installed and available in your system PATH
+- For Linux clipboard support: `xclip` or `xsel` is recommended
 
 ## Installation
 > [!TIP]
@@ -65,7 +70,7 @@ The installation is done inside the selected path, `~/.scripts/` in our case. Pl
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/javiiervm/python-gitmanager.git
+   git clone https://github.com/javiiervm/GitManager.git
    cd GitManager
    ```
 
@@ -75,27 +80,31 @@ The installation is done inside the selected path, `~/.scripts/` in our case. Pl
    ```
 
  > [!CAUTION]
- > I recommend not creating a virtual environment for this project, or the script may not work properly from any directory. However, if you want to create a virtual environment to install the dependencies there, you can do so with the command:
+ > It's recommended **not to use a virtual environment** for this project if you want to run the script globally from any directory. If you prefer to use a virtual environment, you can activate it each time before running the script.
  >
  > ```bash
- > python3 -m venv venv
+ > python3 -m venv venv      # Create the virtual environment
+ > # Activate the virtual environment 
  > source venv/bin/activate  # On Windows use: venv\Scripts\activate
  > ```
 
 3. **Define an alias for the script:**
-   Open your shell script in your favourite editor, for example in a bash terminal with nano editor:
+   Open your shell config file (e.g., `~/.bashrc`, `~/.zshrc`) in your preferred editor:
    ```bash
    nano ~/.bashrc
    ```
-   > For zsh you should execute `nano ~/.zshrc` or maybe you prefer to use `vim` instead of `nano`, make sure to match your system configuration in this step.
-   
-   Once you have opened the shell script in your text editor, add the following line at the bottom:
+   Add the following line:
    ```bash
    alias gitmanager="python3 ~/.scripts/gitmanager.py"
    # You may have defined another route or may need to execute 'python' instead of 'python3', depending on your installation and OS
    ```
+   Reload your shell configuration:
+   ```bash
+   source ~/.bashrc
+   ```
 
-You are all set!
+Before start using the script, you have to configure your key to encrypt all the tokens, otherwise the script won't work properly. To simplify this, you can find a tool to help you in the process, check out the [Generate Key Tool](#generate-key-tool-generate_keypy) section for more information about it.
+
 
 ## Usage
 Navigate to your git repository directory and run:
@@ -135,11 +144,40 @@ If not inside a git repository, GitManager will start in **token management mode
 | 5   | **Delete all tokens**               | Clears all the content in the JSON file.                               
 | 0   | **Exit**                          | Exit the program.                                                  |
 
-## Notes on Tracking Management
+## Tracking Management Details
 
 - These features use Git's sparse-checkout functionality (`git sparse-checkout init --no-cone` and `git sparse-checkout set`) to selectively include/exclude files from the working directory without deleting them from the repository.  
 - The commands adjust the sparse-checkout configuration and refresh the working tree (`git checkout`) accordingly.  
 - This enables handling large repos or ignoring specific files locally without affecting the remote repository or commit history.
+
+## Generate Key Tool (`generate_key.py`)
+To securely encrypt your token storage, you must generate a 32-byte base64 key and set it as an environment variable `GITMANAGER_KEY`.
+
+A helper script `generate_key.py` is provided:
+
+### Features
+- Generates a secure random 32-byte encryption key encoded in URL-safe base64.
+- Prints the exact export command for Unix-like shells (`export GITMANAGER_KEY="..."`).
+- Detects your OS and attempts to copy this command to your clipboard using multiple methods:
+  - `pyperclip` (if installed)
+  - `xclip` or `xsel` on Linux
+  - `pbcopy` on macOS
+  - `clip` command on Windows (Git Bash terminal)
+- Asks if you want to automatically add the export command to your shell profile (`~/.bashrc`, `~/.zshrc`, or PowerShell profile on Windows).
+- Helps you set the key securely for future GitManager sessions.
+
+### Usage
+Run the script:
+```bash
+python3 generate_key.py
+```
+
+Follow the prompts:
+- The script prints your generated key export command.
+- The command is copied automatically to your clipboard.
+- You are asked whether to save this command in your shell startup file for persistence.
+
+After this, restart your terminal or run `source ~/.bashrc` (or equivalent) to load the key.
 
 ## Troubleshooting
 * **Clipboard not working?**
@@ -147,6 +185,8 @@ If not inside a git repository, GitManager will start in **token management mode
   * On Windows/macOS, ensure `pyperclip` is installed.
 * **Token not accepted?**
   * Ensure your GitHub token has the correct scopes (typically repo).
+* **Key format error?**
+  * Your `GITMANAGER_KEY` must be a base64-encoded 32-byte key. Use `generate_key.py` to create a valid key.
 
-<br /><br />
-For any issues or suggestions, please open an issue or contact the author.
+## Contact & Contributions
+Feel free to open issues or submit pull requests in the repository. Contributions and feedback are welcome!
