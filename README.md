@@ -1,7 +1,21 @@
 <div align="center">
   <img width="80" height="80" alt="Git-Icon-1788C" src="https://github.com/user-attachments/assets/a0385a6f-6304-40c2-af95-3c76da4b5cee" />
   <h1 align="center">Git Manager</h1>
+  <img src="https://img.shields.io/badge/license-MIT-blue" />
+  <img src="https://img.shields.io/github/last-commit/javiiervm/GitManager" />
+  <img src="https://img.shields.io/badge/python-3.10%2B-yellow" />
+  <img src="https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-lightgrey" />
+  <img src="https://img.shields.io/github/issues/javiiervm/GitManager" />
+  <img src="https://img.shields.io/github/stars/javiiervm/GitManager" />
+  <br />
+  <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white" />
+  <img src="https://img.shields.io/badge/Pyperclip-4B8BBE?logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/JSON-000000?logo=json&logoColor=white" />
+  <img src="https://img.shields.io/badge/xclip%20%2F%20xsel-000000?logo=linux&logoColor=white" />
+  <img src="https://img.shields.io/badge/Git%20Bash-4EAA25?logo=gnu-bash&logoColor=white" />
 </div>
+<br /><br />
 
 **Git Manager** is a Python command-line tool for easily managing GitHub repositories and personal access tokens. It provides a user-friendly interactive menu to perform common git operations, manage authentication tokens, and handle branches, commits, and clipboard operations across Linux, Windows, and macOS.
 > [!NOTE]
@@ -16,13 +30,17 @@
 > All routes specified in this code must follow **UNIX format** for the script to work properly.
 
 ## Features
-* **Token Management**: Securely store, retrieve, copy, and delete GitHub personal access tokens per repository using a json file (doesn't change any GitHub data!).
+* **Token Management**: Securely store, retrieve, copy, and delete GitHub personal access tokens per repository using a json file (doesn't change any GitHub data!). You can manage tokens even when not inside a git repository.
 * **Git Operations**: Pull, push (with or without commit), commit, and add files interactively.
 * **Branch Management**: List, create, delete, switch, and merge branches.
 * **Revert Actions**: Revert last commit, push, add, or merge.
 * **Clipboard Support**: Copy tokens to the clipboard with cross-platform support.
 * **Interactive Menus**: Easy-to-use text-based interface for all operations.
-* **Token Management Mode**: Manage tokens even when not inside a git repository.
+* **Tracking Management**:  
+  - **Untrack files**: Selectively exclude files from the repository working tree using Git's sparse-checkout feature, effectively "untracking" them and freeing local space without deleting them from the remote repository.  
+  - **Restore untracked files**: Re-include previously untracked files back into the working tree via sparse-checkout.  
+  
+  This allows fine-grained control of which files are checked out locally, helping with large repos or partial checkouts.
 
 ## Security
 Tokens are stored in a JSON file for authenticated git operations and are not shared elsewhere.
@@ -103,6 +121,8 @@ If not inside a git repository, GitManager will start in **token management mode
 | 12  | **revert last add**               | Unstage all staged files.                                          |
 | 13  | **revert last merge**             | Abort the last merge operation.                                    |
 | 14  | **remove this repo from git manager** | Delete the stored token for this repo.                        |
+| 15  | **untrack files (sparse-checkout)** | Interactively select files to exclude from the working tree (sparse-checkout untrack).          |
+| 16  | **restore untracked files**         | Interactively select files previously untracked to restore back to the working tree.           |
 | 0   | **exit**                          | Exit the program.                                                  |
 
 ### Token management mode (outside a repository)
@@ -114,6 +134,12 @@ If not inside a git repository, GitManager will start in **token management mode
 | 4   | **Delete token**                   | Deletes from the JSON file the information about the selected repository.                        |
 | 5   | **Delete all tokens**               | Clears all the content in the JSON file.                               
 | 0   | **Exit**                          | Exit the program.                                                  |
+
+## Notes on Tracking Management
+
+- These features use Git's sparse-checkout functionality (`git sparse-checkout init --no-cone` and `git sparse-checkout set`) to selectively include/exclude files from the working directory without deleting them from the repository.  
+- The commands adjust the sparse-checkout configuration and refresh the working tree (`git checkout`) accordingly.  
+- This enables handling large repos or ignoring specific files locally without affecting the remote repository or commit history.
 
 ## Troubleshooting
 * **Clipboard not working?**
