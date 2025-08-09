@@ -9,12 +9,13 @@ try:
 except Exception:
     pyperclip = None
 
+# Modify this route to match where you want to store the JSON that contains the tokens' information
 TOKEN_FILE = os.path.expanduser("~/.scripts/.safe/.gitmanager_tokens.json")
+
 RESET = "\033[0m"
 BOLD = "\033[1m"
 GREEN = "\033[92m"
 RED = "\033[91m"
-
 
 def get_repo_url():
     try:
@@ -25,18 +26,15 @@ def get_repo_url():
     except Exception:
         return None
 
-
 def load_tokens():
     if os.path.exists(TOKEN_FILE):
         with open(TOKEN_FILE, "r") as f:
             return json.load(f)
     return {}
 
-
 def save_tokens(tokens):
     with open(TOKEN_FILE, "w") as f:
         json.dump(tokens, f)
-
 
 def get_token_for_repo(repo_url, tokens):
     if repo_url in tokens:
@@ -51,12 +49,10 @@ def get_token_for_repo(repo_url, tokens):
     print(f"{BOLD}You can now use this token for operations on {repo_url}.{RESET}\n")
     return token
 
-
 def get_user_and_repo(repo_url):
     path = repo_url.split("github.com/", 1)[1]
     user, repo = path.split("/", 1)
     return user, repo
-
 
 def copy_to_clipboard_windows(text):
     try:
@@ -75,7 +71,6 @@ def copy_to_clipboard_windows(text):
         except Exception:
             print(f"{RED}Clipboard copy failed on Windows.{RESET}")
 
-
 def copy_to_clipboard_linux(text):
     try:
         if os.system("which xclip > /dev/null 2>&1") == 0:
@@ -93,7 +88,6 @@ def copy_to_clipboard_linux(text):
     except Exception:
         print(f"{RED}Clipboard copy failed on Linux.{RESET}")
 
-
 def copy_to_clipboard_macos(text):
     try:
         os.system(f"echo '{text}' | pbcopy")
@@ -107,7 +101,6 @@ def copy_to_clipboard_macos(text):
                 print(f"{RED}Clipboard copy failed on macOS. Install pyperclip or use a compatible terminal.{RESET}")
         except Exception:
             print(f"{RED}Clipboard copy failed on macOS.{RESET}")
-
 
 def copy_to_clipboard(text):
     system = platform.system()
@@ -127,11 +120,9 @@ def copy_to_clipboard(text):
         except Exception:
             print(f"{RED}Clipboard copy not supported on this OS.{RESET}")
 
-
 def make_pull(token, user, repo):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
     os.system(f"git pull {remote_url}")
-
 
 def make_push(token, user, repo, commit_msg):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
@@ -139,15 +130,12 @@ def make_push(token, user, repo, commit_msg):
     os.system(f'git commit -m "{commit_msg}"')
     os.system(f"git push {remote_url}")
 
-
 def make_push_no_add(token, user, repo):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
     os.system(f"git push {remote_url}")
 
-
 def make_commit_only(commit_msg):
     os.system(f'git commit -m "{commit_msg}"')
-
 
 def interactive_git_add():
     status = subprocess.check_output(["git", "status", "--short"], encoding="utf-8")
@@ -170,16 +158,13 @@ def interactive_git_add():
     except Exception as e:
         print(f"{RED}Error: {e}{RESET}")
 
-
 def show_git_status():
     status = subprocess.check_output(["git", "status"], encoding="utf-8")
     print(f"{BOLD}{status}{RESET}")
 
-
 def show_current_branch():
     branch = subprocess.check_output(["git", "branch", "--show-current"], encoding="utf-8").strip()
     print(f"{GREEN}Current branch: {BOLD}{branch}{RESET}")
-
 
 def manage_branches():
     while True:
@@ -213,24 +198,19 @@ def manage_branches():
                 case _:
                     print(f"{RED}Unrecognized option.{RESET}")
 
-
 def revert_last_commit():
     os.system("git revert HEAD")
-
 
 def revert_last_push(token, user, repo):
     remote_url = f"https://{user}:{token}@github.com/{user}/{repo}.git"
     os.system("git reset --hard HEAD~1")
     os.system(f"git push {remote_url} --force")
 
-
 def revert_last_add():
     os.system("git reset")
 
-
 def revert_last_merge():
     os.system("git merge --abort")
-
 
 def remove_token_for_repo(repo_url, tokens):
     if repo_url in tokens:
@@ -239,7 +219,6 @@ def remove_token_for_repo(repo_url, tokens):
         print(f"{GREEN}Token for {repo_url} removed.{RESET}")
     else:
         print(f"{RED}No token found for {repo_url}.{RESET}")
-
 
 def list_all_files():
     try:
@@ -250,7 +229,6 @@ def list_all_files():
         print(f"{RED}Error listing files.{RESET}")
         return []
 
-
 def list_sparse_files():
     try:
         output = subprocess.check_output(["git", "sparse-checkout", "list"], encoding="utf-8")
@@ -258,7 +236,6 @@ def list_sparse_files():
         return [f for f in files if f]
     except Exception:
         return []
-
 
 def untrack_files():
     all_files = list_all_files()
@@ -295,7 +272,6 @@ def untrack_files():
         print(f"{GREEN}Files untracked: {', '.join(selected)}{RESET}")
     except Exception as e:
         print(f"{RED}Error: {e}{RESET}")
-
 
 def restore_untracked_files():
     all_files = list_all_files()
@@ -338,7 +314,6 @@ def restore_untracked_files():
         print(f"{GREEN}Files restored: {', '.join(selected)}{RESET}")
     except Exception as e:
         print(f"{RED}Error: {e}{RESET}")
-
 
 def reduced_menu(tokens):
     while True:
@@ -410,7 +385,6 @@ def reduced_menu(tokens):
                 case _:
                     print(f"{RED}Unrecognized option.{RESET}")
 
-
 def menu():
     print("\n=============== GIT MANAGER ===============")
     print("1. pull")
@@ -430,7 +404,6 @@ def menu():
     print("15. untrack files (sparse-checkout)")
     print("16. restore untracked files")
     print("0. exit")
-
 
 if __name__ == "__main__":
     repo_url = get_repo_url()
