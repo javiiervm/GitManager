@@ -211,6 +211,65 @@ def remove_token_for_repo(repo_url, tokens):
     else:
         print(f"{RED}No token found for {repo_url}.{RESET}")
 
+def sparse_checkout_untrack():
+    tracked = subprocess.check_output(["git", "ls-files"], encoding="utf-8").splitlines()
+    if not tracked:
+        print(f"{RED}No files tracked by git.{RESET}")
+        return
+    print("Select files/folders to UNTRACK (sparse-checkout set):")
+    for idx, fname in enumerate(tracked, 1):
+        print(f"{idx}. {fname}")
+    choices = input("Comma-separated numbers (e.g. 1,3,5):\n>> ").strip()
+    if not choices:
+        print(f"{RED}No files selected.{RESET}")
+        return
+    try:
+        selected = [tracked[int(i)-1] for i in choices.split(",") if i.strip().isdigit() and 0 < int(i) <= len(tracked)]
+        if not selected:
+            print(f"{RED}Invalid selection.{RESET}")
+            return
+        subprocess.run(["git", "sparse-checkout", "init"], check=False)
+        subprocess.run(["git", "sparse-checkout", "set"] + selected, check=True)
+        subprocess.run(["git", "checkout"], check=True)
+        print(f"{GREEN}Sparse-checkout applied. Only the selected files will remain in the working tree.{RESET}")
+    except Exception as e:
+        print(f"{RED}Error: {e}{RESET}")
+
+def sparse_checkout_restore():
+    try:
+        current = subprocess.check_output(["git", "sparse-checkout", "list"], encoding="utf-8").splitlines()
+    except Exception:
+        print(f"{RED}Sparse-checkout is not active or could not be read.{RESET}")
+        return
+    if not current:
+        print(f"{GREEN}No active sparse-checkout.{RESET}")
+        return
+    print("Active sparse-checkout on:")
+    for idx, fname in enumerate(current, 1):
+        print(f"{idx}. {fname}")
+    print("What do you want to restore?")
+    print("1. Restore ALL files (disable sparse-checkout)")
+    print("2. Restore specific files/folders")
+    op = input("Select option:\n>> ").strip()
+    if op == "1":
+        subprocess.run(["git", "sparse-checkout", "disable"], check=True)
+        subprocess.run(["git", "checkout"], check=True)
+        print(f"{GREEN}Sparse-checkout disabled. All files restored.{RESET}")
+    elif op == "2":
+        sel = input("Comma-separated numbers of the files to restore:\n>> ").strip()
+        if not sel:
+            print(f"{RED}No files selected.{RESET}")
+            return
+        try:
+            selected = [current[int(i)-1] for i in sel.split(",") if i.strip().isdigit() and 0 < int(i) <= len(current)]
+            subprocess.run(["git", "sparse-checkout", "add"] + selected, check=True)
+            subprocess.run(["git", "checkout"], check=True)
+            print(f"{GREEN}Selected files restored to the working tree.{RESET}")
+        except Exception as e:
+            print(f"{RED}Error: {e}{RESET}")
+    else:
+        print(f"{RED}Unrecognized option.{RESET}")
+
 def reduced_menu(tokens):
     while True:
         print("\n======= GIT MANAGER (No repo detected) =======")
@@ -298,6 +357,8 @@ def menu():
     print("12. revert last add")
     print("13. revert last merge")
     print("14. remove this repo from git manager")
+    print("15. sparse-checkout untrack files/folders")
+    print("16. undo sparse-checkout (restore all files/folders)")
     print("0. exit")
 
 if __name__ == "__main__":
@@ -350,8 +411,11 @@ if __name__ == "__main__":
             case "14":
                 remove_token_for_repo(repo_url, tokens)
                 break
+            case "15":
+                sparse_checkout_untrack()
+            case "16":
+                sparse_checkout_restore()
             case "0" | "exit":
                 break
             case _:
-
                 print(f"{RED}Unrecognized option.{RESET}")
