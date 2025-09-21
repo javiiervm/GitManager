@@ -488,6 +488,9 @@ if __name__ == "__main__":
     print(f"{GREEN}Repository URL detected: {BOLD}{repo_url}{RESET}")
     token = get_token_for_repo(repo_url, tokens)
     user, repo = get_user_and_repo(repo_url)
+    if '--push' in sys.argv:
+        make_push_no_add(token, user, repo)
+        exit(0)
     while True:
         menu()
         op = input("\nSelect an option:\n>> ").strip()
