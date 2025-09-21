@@ -491,6 +491,9 @@ if __name__ == "__main__":
     if '--push' in sys.argv:
         make_push_no_add(token, user, repo)
         exit(0)
+    if '--pull' in sys.argv:
+        make_pull(token, user, repo)
+        exit(0)
     while True:
         menu()
         op = input("\nSelect an option:\n>> ").strip()
